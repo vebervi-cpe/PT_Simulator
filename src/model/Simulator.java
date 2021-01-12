@@ -16,7 +16,7 @@ public class Simulator {
 	private List<Fire> firesToUpdate = new ArrayList<Fire>();
 	
 	// Plus la valeur est grande, plus le risque de générer un feu à chaque tour est grand.
-	private double randomFireThreshold = 0.01; 
+	private double randomFireThreshold = 0.5;
 	
 	private String serverDBSimulator;
 	private String serverDBEmergency;
@@ -28,8 +28,8 @@ public class Simulator {
 	
 	public void run() {
 		while(true) {
-			// Etape 0 : pause de 5 secondes.
-			this.step0_wait(5);
+			// Etape 0 : pause de 10 secondes.
+			this.step0_wait(10);
 			
 			System.out.print("<====> START OF THE LOOP <====>\n");
 			
@@ -56,8 +56,8 @@ public class Simulator {
 			
 			System.out.print("<====> HTTP REQUESTS <====>\n");
 
-			// Etape 5 : mettre à jour la BDD Simulator (camions et feux).
-			httpRequester.updateDBSimulator(this.serverDBSimulator, this.trucksToUpdate, this.firesToUpdate);
+			// Etape 5 : mettre à jour la BDD Simulator (feux).
+			httpRequester.updateDBSimulator(this.serverDBSimulator, this.firesToUpdate);
 
 			// Etape 6 : mettre à jour la BDD Emergency (camions).
 			httpRequester.updateDBEmergency(this.serverDBEmergency, this.trucksToUpdate);

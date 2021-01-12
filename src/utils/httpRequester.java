@@ -182,41 +182,7 @@ public final class httpRequester {
 		return stations;
 	}
 	
-	public static void updateDBSimulator(String server, List<Truck> trucks, List<Fire> fires) {
-		// Mise à jour des camions.
-		updateTrucks(server, trucks);
-		
-		// Insertion / mise à jour / suppression des feux.
-		updateFires(server, fires);
-	}
-	
-	public static void updateDBEmergency(String server, List<Truck> trucks) {
-		// Mise à jour des camions.
-		updateTrucks(server, trucks);
-	}
-	
-	private static void updateTrucks(String server, List<Truck> trucks) {
-		String endpoint = "/camions/modifier_position.php";
-		for(Truck truck : trucks) {
-			try {
-				// On fabrique notre objet JSON qui va contenir le camion à mettre à jour.
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("id_camion", truck.getId());
-				jsonObject.put("posX", truck.getPosition().getX());
-				jsonObject.put("posY", truck.getPosition().getY());
-				
-				StringWriter output = new StringWriter();
-				jsonObject.writeJSONString(output);
-				String jsonText = output.toString();
-				
-				put(server + endpoint, jsonText);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private static void updateFires(String server, List<Fire> fires) {
+	public static void updateDBSimulator(String server, List<Fire> fires) {
 		for(Fire fire : fires) {
 			// Si c'est un feu nouvellement généré.
 			if(fire.getId() == -1) {
@@ -272,6 +238,27 @@ public final class httpRequester {
 				jsonObject.put("id_feu", fire.getId());
 				jsonObject.put("intensite", fire.getIntensity());
 
+				StringWriter output = new StringWriter();
+				jsonObject.writeJSONString(output);
+				String jsonText = output.toString();
+				
+				put(server + endpoint, jsonText);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void updateDBEmergency(String server, List<Truck> trucks) {
+		String endpoint = "/camions/modifier_position.php";
+		for(Truck truck : trucks) {
+			try {
+				// On fabrique notre objet JSON qui va contenir le camion à mettre à jour.
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("id_camion", truck.getId());
+				jsonObject.put("posX", truck.getPosition().getX());
+				jsonObject.put("posY", truck.getPosition().getY());
+				
 				StringWriter output = new StringWriter();
 				jsonObject.writeJSONString(output);
 				String jsonText = output.toString();
