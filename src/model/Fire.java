@@ -34,8 +34,10 @@ public class Fire {
 
 	public Boolean hasTruck(List<Truck> trucks) {
 		for(Truck truck : trucks) {
-			if(this.position == truck.getPosition())
+			if(this.position.equals(truck.getPosition())) {
+				System.out.print("Je suis fire " + this.getId() + this.getPosition() + " mon truck" + truck.getId() + truck.getPosition());
 				return true;
+			}
 		}
 		return false;
 	}

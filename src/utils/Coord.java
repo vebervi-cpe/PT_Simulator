@@ -30,4 +30,16 @@ public class Coord {
 		return "(" + this.getX() + ";" + this.getY() + ")";
 	}
 	
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Coord coord = (Coord) obj;
+        return this.getX() == coord.getX() && this.getY() == coord.getY();
+    }
+	
 }

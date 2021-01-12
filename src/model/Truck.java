@@ -6,12 +6,14 @@ public class Truck {
 
 	private int id;
 	private Coord position;
-	private Coord destination;
+	private int idStation;
+	private int idFire;
 	
-	public Truck(int id, Coord position, Coord destination) {
+	public Truck(int id, Coord position, int idStation, int idFire) {
 		this.id = id;
 		this.position = position;
-		this.destination = destination;
+		this.idStation = idStation;
+		this.idFire = idFire;
 	}
 	
 	public int getId() {
@@ -22,8 +24,12 @@ public class Truck {
 		return this.position;
 	}
 	
-	public Coord getDestination() {
-		return this.destination;
+	public int getIdStation() {
+		return this.idStation;
+	}
+	
+	public int getIdFire() {
+		return this.idFire;
 	}
 	
 	void move(Coord position) {
@@ -33,7 +39,8 @@ public class Truck {
 	public String toString() {
 		return "Truck #" + this.getId() +
 				"\n  Position : " + this.getPosition() +
-				"\n  Destination : " + this.getDestination() + "\n";
+				"\n  IDStation : " + this.getIdStation() +
+				"\n  IDFire : " + this.getIdFire() + "\n";
 	}
 	
 }

@@ -10,19 +10,20 @@ public class Simulator {
 
 	private List<Truck> trucks;
 	private List<Fire> fires;
+	private List<Station> stations;
 	
 	private List<Truck> trucksToUpdate = new ArrayList<Truck>();
 	private List<Fire> firesToUpdate = new ArrayList<Fire>();
 	
 	// Plus la valeur est grande, plus le risque de générer un feu à chaque tour est grand.
-	private double randomFireThreshold = 0.5; 
+	private double randomFireThreshold = 0.01; 
 	
-	private String endpointDBSimulator;
-	private String endpointDBEmergency;
+	private String serverDBSimulator;
+	private String serverDBEmergency;
 	
-	public Simulator(String endpointSimulator, String endpointEmergency) {
-		this.endpointDBSimulator = endpointSimulator;
-		this.endpointDBEmergency = endpointEmergency;
+	public Simulator(String serverSimulator, String serverEmergency) {
+		this.serverDBSimulator = serverSimulator;
+		this.serverDBEmergency = serverEmergency;
 	}
 	
 	public void run() {
@@ -32,12 +33,14 @@ public class Simulator {
 			
 			System.out.print("<====> START OF THE LOOP <====>\n");
 			
-			// Etape 1 : récupérer les feux et les camions de la BDD Emergency.
-			this.trucks = httpRequester.getAllTrucks(this.endpointDBEmergency);
-			this.fires = httpRequester.getAllFires(this.endpointDBEmergency);
+			// Etape 1 : récupérer les feux, les camions et les casernes de la BDD Emergency.
+			this.trucks = httpRequester.getAllTrucks(this.serverDBEmergency);
+			this.fires = httpRequester.getAllFires(this.serverDBEmergency);
+			this.stations = httpRequester.getAllStations(this.serverDBEmergency);
 
 			System.out.print("<====> TRUCKS GET <====>\n" + this.trucks + "\n");
 			System.out.print("<====> FIRES GET <====>\n" + this.fires + "\n");
+			System.out.print("<====> STATIONS GET <====>\n" + this.stations + "\n");
 
 			// Etape 2 : déplacer les camions.
 			this.step2_moveTrucks();
@@ -49,18 +52,19 @@ public class Simulator {
 			this.step4_generateRandomFire();
 			
 			System.out.print("<====> TRUCKS TO UPDATE <====>\n" + this.trucksToUpdate + "\n");
-			System.out.print("<====> FIRES TO UPDATE <====>\n" + this.firesToUpdate + "\n");
+			System.out.print("<====> FIRES TO UPDATE <====>\n" + this.firesToUpdate + "\n\n");
+			
+			System.out.print("<====> HTTP REQUESTS <====>\n");
 
 			// Etape 5 : mettre à jour la BDD Simulator (camions et feux).
-			httpRequester.updateDBSimulator(this.endpointDBSimulator, this.trucksToUpdate, this.firesToUpdate);
+			httpRequester.updateDBSimulator(this.serverDBSimulator, this.trucksToUpdate, this.firesToUpdate);
 
 			// Etape 6 : mettre à jour la BDD Emergency (camions).
-			httpRequester.updateDBEmergency(this.endpointDBEmergency, this.trucksToUpdate);
+			httpRequester.updateDBEmergency(this.serverDBEmergency, this.trucksToUpdate);
 			
 			System.out.print("<====> END OF THE LOOP <====>\n\n");
 			
 			this.clearLists();
-
 		}
 	}
 	
@@ -74,9 +78,31 @@ public class Simulator {
 	
 	private void step2_moveTrucks() {
 		for(Truck truck : this.trucks) {
-			if(truck.getPosition() != truck.getDestination()) {
+			Boolean hasFire = false;
+			Coord destination = null;
+
+			// On parcours tous les feux...
+			for(Fire fire : this.fires) {
+				// ...et si notre camion est lié à un feu que l'on a récupéré, c'est sa destination.
+				if(truck.getIdFire() == fire.getId()) {
+					hasFire = true;
+					destination = fire.getPosition();
+				}
+			}
+
+			// Sinon, c'est que le camion n'est lié à aucun feu...
+			if(!hasFire) {
+				// ...alors on récupère les coordonnées de sa caserne pour en faire la destination.
+				for(Station station : this.stations) {
+					if(station.getId() == truck.getIdStation()) {
+						destination = station.getPosition();
+					}
+				}
+			}
+			
+			// S'il le camion n'est pas déjà sur sa destination, on va devoir le faire avancer.
+			if(!truck.getPosition().equals(destination)) {
 				Coord nextPosition = truck.getPosition();
-				Coord destination = truck.getDestination();
 				
 				// On décale de 1 en vertical et en horizontal selon où se trouve la destination (à améliorer ?).
 				if(nextPosition.getX() < destination.getX())
@@ -106,8 +132,8 @@ public class Simulator {
 	
 	private void step4_generateRandomFire() {
 		if(Math.random() < this.randomFireThreshold) {
-			Coord randomCoord = new Coord((int) (Math.random() * 10), (int) (Math.random() * 10));
-			int randomIntensity = (int) (Math.random() * 10 + 1);
+			Coord randomCoord = new Coord((int) (Math.random() * 100), (int) (Math.random() * 100));
+			int randomIntensity = (int) (Math.random() * 9 + 1);
 			this.firesToUpdate.add(new Fire(-1, randomCoord, randomIntensity));
 		}
 	}
