@@ -124,7 +124,8 @@ public final class httpRequester {
                 Coord position = new Coord(Float.parseFloat((String) innerObj.get("positionX_camion")), Float.parseFloat((String) innerObj.get("positionY_camion")));
                 int id_caserne = Integer.parseInt((String) innerObj.get("id_caserne"));
                 int id_feu = Integer.parseInt((String) innerObj.get("id_feu"));
-                trucks.add(new Truck(id_camion, position, id_caserne, id_feu));
+                int capacite = Integer.parseInt((String) innerObj.get("capacite"));
+                trucks.add(new Truck(id_camion, position, id_caserne, id_feu, capacite));
             }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -192,8 +193,8 @@ public final class httpRequester {
 					// On fabrique notre objet JSON qui va contenir le feu à ajouter.
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("intensite", fire.getIntensity());
-					jsonObject.put("posX", String.valueOf(fire.getPosition().getX()));
-					jsonObject.put("posY", String.valueOf(fire.getPosition().getY()));
+					jsonObject.put("posX", String.valueOf(fire.getPosition().getX()).replace(".",  ","));
+					jsonObject.put("posY", String.valueOf(fire.getPosition().getY()).replace(".",  ","));
 					jsonObject.put("date_debut", String.valueOf(LocalDate.now()));
 					
 					StringWriter output = new StringWriter();

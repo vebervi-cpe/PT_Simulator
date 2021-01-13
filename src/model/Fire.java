@@ -32,14 +32,13 @@ public class Fire {
 		this.intensity = intensity;
 	}
 
-	public Boolean hasTruck(List<Truck> trucks) {
+	public Truck getTruck(List<Truck> trucks) {
 		for(Truck truck : trucks) {
 			if(this.position.equals(truck.getPosition())) {
-				System.out.print("Je suis fire " + this.getId() + this.getPosition() + " mon truck" + truck.getId() + truck.getPosition());
-				return true;
+				return truck;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public String toString() {

@@ -8,12 +8,14 @@ public class Truck {
 	private Coord position;
 	private int idStation;
 	private int idFire;
+	private int capacity;
 	
-	public Truck(int id, Coord position, int idStation, int idFire) {
+	public Truck(int id, Coord position, int idStation, int idFire, int capacity) {
 		this.id = id;
 		this.position = position;
 		this.idStation = idStation;
 		this.idFire = idFire;
+		this.capacity = capacity;
 	}
 	
 	public int getId() {
@@ -32,6 +34,10 @@ public class Truck {
 		return this.idFire;
 	}
 	
+	public int getCapacity() {
+		return this.capacity;
+	}
+	
 	void move(Coord position) {
 		this.position = position;
 	}
@@ -40,7 +46,8 @@ public class Truck {
 		return "Truck #" + this.getId() +
 				"\n  Position : " + this.getPosition() +
 				"\n  IDStation : " + this.getIdStation() +
-				"\n  IDFire : " + this.getIdFire() + "\n";
+				"\n  IDFire : " + this.getIdFire() + 
+				"\n  Capacity : " + this.getCapacity() + "\n";
 	}
 	
 }

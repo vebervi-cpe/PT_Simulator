@@ -104,7 +104,7 @@ public class Simulator {
 			// S'il le camion n'est pas déjà sur sa destination, on va devoir le faire avancer.
 			if(!truck.getPosition().equals(destination)) {
 				Coord nextPosition = truck.getPosition();
-				float travelDistance = (float) 0.0002;
+				float travelDistance = (float) 0.05;
 				
 				// On décale de X en vertical et en horizontal selon où se trouve la destination (à améliorer ? oui).
 				if(nextPosition.getX() < destination.getX())
@@ -125,8 +125,10 @@ public class Simulator {
 	
 	private void step3_computeFires() {
 		for(Fire fire : this.fires) {
-			if(fire.hasTruck(this.trucks)) {
-				fire.setIntensity(fire.getIntensity() - 1);
+			// Si un camion se trouve sur le feu.
+			Truck truck = fire.getTruck(this.trucks);
+			if(truck != null) {
+				fire.setIntensity(fire.getIntensity() - truck.getCapacity());
 				firesToUpdate.add(fire);
 			}
 		}
@@ -140,9 +142,9 @@ public class Simulator {
 		}
 
 		if(Math.random() < this.randomFireThreshold + randomBoost) {
-			// Valeurs en dur qui ciblent Lyon et ses alentours.
-			float minX = (float) Math.random() * 100, maxX = (float) Math.random() * 100;
-			float minY = (float) Math.random() * 100, maxY = (float) Math.random() * 100;
+			// Les valeurs en dur représentent Lyon et ses alentours.
+			float minX = (float) 45.7079, maxX = (float) 45.7985;
+			float minY = (float) 4.7703, maxY = (float) 4.9401;
 			float randomCoordX = (float) (minX + Math.random() * (maxX - minX));
 			float randomCoordY = (float) (minY + Math.random() * (maxY - minY));
 			
