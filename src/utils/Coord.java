@@ -2,27 +2,27 @@ package utils;
 
 public class Coord {
 
-	private int x;
-	private int y;
+	private float x;
+	private float y;
 	
-	public Coord(int x, int y) {
+	public Coord(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 	
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 	}
 	
-	public int getY() {
+	public float getY() {
 		return this.y;
 	}
 	
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 	}
 	
@@ -39,7 +39,8 @@ public class Coord {
         }
 
         Coord coord = (Coord) obj;
-        return this.getX() == coord.getX() && this.getY() == coord.getY();
+        // Comparer à 0.0002 permet d'occulter certains chiffres après la virgule.
+        return (Math.abs(this.getX() - coord.getX()) < 0.0002) && (Math.abs(this.getY() - coord.getY()) < 0.0002);
     }
 	
 }

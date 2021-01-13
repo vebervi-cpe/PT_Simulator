@@ -121,7 +121,7 @@ public final class httpRequester {
             while (i.hasNext()) {
                 JSONObject innerObj = (JSONObject) i.next();
                 int id_camion = Integer.parseInt((String) innerObj.get("id_camion"));
-                Coord position = new Coord(Integer.parseInt((String) innerObj.get("positionX_camion")), Integer.parseInt((String) innerObj.get("positionY_camion")));
+                Coord position = new Coord(Float.parseFloat((String) innerObj.get("positionX_camion")), Float.parseFloat((String) innerObj.get("positionY_camion")));
                 int id_caserne = Integer.parseInt((String) innerObj.get("id_caserne"));
                 int id_feu = Integer.parseInt((String) innerObj.get("id_feu"));
                 trucks.add(new Truck(id_camion, position, id_caserne, id_feu));
@@ -146,7 +146,7 @@ public final class httpRequester {
             while (i.hasNext()) {
                 JSONObject innerObj = (JSONObject) i.next();
                 int id_feu = Integer.parseInt((String) innerObj.get("id_feu"));
-                Coord position = new Coord(Integer.parseInt((String) innerObj.get("positionX")), Integer.parseInt((String) innerObj.get("positionY")));
+                Coord position = new Coord(Float.parseFloat((String) innerObj.get("positionX")), Float.parseFloat((String) innerObj.get("positionY")));
                 int intensite = Integer.parseInt((String) innerObj.get("intensite"));
                 if(intensite != 0)  {
                 	fires.add(new Fire(id_feu, position, intensite));
@@ -172,7 +172,7 @@ public final class httpRequester {
             while (i.hasNext()) {
                 JSONObject innerObj = (JSONObject) i.next();
                 int id_caserne = Integer.parseInt((String) innerObj.get("id_caserne"));
-                Coord position = new Coord(Integer.parseInt((String) innerObj.get("positionX_caserne")), Integer.parseInt((String) innerObj.get("positionY_caserne")));
+                Coord position = new Coord(Float.parseFloat((String) innerObj.get("positionX_caserne")), Float.parseFloat((String) innerObj.get("positionY_caserne")));
                 stations.add(new Station(id_caserne, position));
             }
 		} catch (Exception e) {
@@ -192,8 +192,8 @@ public final class httpRequester {
 					// On fabrique notre objet JSON qui va contenir le feu à ajouter.
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("intensite", fire.getIntensity());
-					jsonObject.put("posX", fire.getPosition().getX());
-					jsonObject.put("posY", fire.getPosition().getY());
+					jsonObject.put("posX", String.valueOf(fire.getPosition().getX()));
+					jsonObject.put("posY", String.valueOf(fire.getPosition().getY()));
 					jsonObject.put("date_debut", String.valueOf(LocalDate.now()));
 					
 					StringWriter output = new StringWriter();
