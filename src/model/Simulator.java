@@ -16,7 +16,7 @@ public class Simulator {
 	private List<Fire> firesToUpdate = new ArrayList<Fire>();
 	
 	// Plus la valeur est grande, plus le risque de générer un feu à chaque tour est grand.
-	private double randomFireThreshold = 0.5;
+	private double randomFireThreshold = 0.2;
 	
 	private String serverDBSimulator;
 	private String serverDBEmergency;
@@ -79,7 +79,8 @@ public class Simulator {
 	private void step2_moveTrucks() {
 		for(Truck truck : this.trucks) {
 			Boolean hasFire = false;
-			Coord destination = null;
+			// On instancie notre destination à une valeur quelconque pour éviter les quelques rares NullPointerException.
+			Coord destination = new Coord(0, 0);
 
 			// On parcours tous les feux...
 			for(Fire fire : this.fires) {
@@ -131,7 +132,13 @@ public class Simulator {
 	}
 	
 	private void step4_generateRandomFire() {
-		if(Math.random() < this.randomFireThreshold) {
+		// Si il n'y a aucun feu actif, le risque de générer un feu est plus grand que d'habitude.
+		double randomBoost = 0;
+		if(this.fires.isEmpty()) {
+			randomBoost = 0.5;
+		}
+
+		if(Math.random() < this.randomFireThreshold + randomBoost) {
 			Coord randomCoord = new Coord((int) (Math.random() * 100), (int) (Math.random() * 100));
 			int randomIntensity = (int) (Math.random() * 9 + 1);
 			this.firesToUpdate.add(new Fire(-1, randomCoord, randomIntensity));
