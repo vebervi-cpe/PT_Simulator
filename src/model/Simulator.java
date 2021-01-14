@@ -16,7 +16,7 @@ public class Simulator {
 	private List<Fire> firesToUpdate = new ArrayList<Fire>();
 	
 	// Plus la valeur est grande, plus le risque de générer un feu à chaque tour est grand.
-	private double randomFireThreshold = 0.5;
+	private double randomFireThreshold = 0.2;
 	
 	private String serverDBSimulator;
 	private String serverDBEmergency;
