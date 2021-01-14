@@ -16,7 +16,7 @@ public class Simulator {
 	private List<Fire> firesToUpdate = new ArrayList<Fire>();
 	
 	// Plus la valeur est grande, plus le risque de générer un feu à chaque tour est grand.
-	private double randomFireThreshold = 0.2;
+	private double randomFireThreshold = 0.5;
 	
 	private String serverDBSimulator;
 	private String serverDBEmergency;
@@ -133,6 +133,10 @@ public class Simulator {
 			Truck truck = fire.getTruck(this.trucks);
 			if(truck != null) {
 				fire.setIntensity(fire.getIntensity() - truck.getCapacity());
+				// Si notre feu a une intensité inférieure à 0, on la met directement à 0.
+				if(fire.getIntensity() < 0) {
+					fire.setIntensity(0);
+				}
 				firesToUpdate.add(fire);
 			}
 		}
