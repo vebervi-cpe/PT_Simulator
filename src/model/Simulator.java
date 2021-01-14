@@ -27,16 +27,17 @@ public class Simulator {
 	}
 	
 	public void run() {
+		Boolean getStationsOnce = true;
 		while(true) {
-			// Etape 0 : pause de 10 secondes.
-			this.step0_wait(10);
-			
 			System.out.print("<====> START OF THE LOOP <====>\n");
 			
 			// Etape 1 : récupérer les feux, les camions et les casernes de la BDD Emergency.
 			this.trucks = httpRequester.getAllTrucks(this.serverDBEmergency);
 			this.fires = httpRequester.getAllFires(this.serverDBEmergency);
-			this.stations = httpRequester.getAllStations(this.serverDBEmergency);
+			if(getStationsOnce) {
+				this.stations = httpRequester.getAllStations(this.serverDBEmergency);
+				getStationsOnce = false;
+			}
 
 			System.out.print("<====> TRUCKS GET <====>\n" + this.trucks + "\n");
 			System.out.print("<====> FIRES GET <====>\n" + this.fires + "\n");
@@ -65,6 +66,9 @@ public class Simulator {
 			System.out.print("<====> END OF THE LOOP <====>\n\n");
 			
 			this.clearLists();
+			
+			// Etape 0 : pause de 10 secondes.
+			this.step0_wait(10);
 		}
 	}
 	

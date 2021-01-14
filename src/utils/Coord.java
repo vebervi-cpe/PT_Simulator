@@ -39,8 +39,9 @@ public class Coord {
         }
 
         Coord coord = (Coord) obj;
+        float delta = (float) 0.05;
         // Comparer à 0.05 permet d'occulter certains chiffres après la virgule.
-        return (Math.abs(this.getX() - coord.getX()) < 0.05) && (Math.abs(this.getY() - coord.getY()) < 0.05);
+        return (Math.abs(this.getX() - coord.getX()) < delta) && (Math.abs(this.getY() - coord.getY()) < delta);
     }
 	
 }
